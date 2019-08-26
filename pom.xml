@@ -1,0 +1,285 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>ru.proitr.tru</groupId>
+    <artifactId>tru-ftp-service</artifactId>
+    <version>1.0-SNAPSHOT</version>
+
+    <parent>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-parent</artifactId>
+        <version>2.0.6.RELEASE</version>
+        <relativePath/>
+    </parent>
+
+    <packaging>jar</packaging>
+
+    <properties>
+        <java.version>1.8</java.version>
+        <spring.version>5.1.0.RELEASE</spring.version>
+        <lombok.version>1.18.2</lombok.version>
+        <com.oracle.ojdbc6.version>12.1.0.2</com.oracle.ojdbc6.version>
+        <org.jooq.version>3.11.5</org.jooq.version>
+    </properties>
+
+    <repositories>
+        <repository>
+            <id>proit.artifactory.releases</id>
+            <url>http://artifactory.eaist.proitr.ru/artifactory/libs-release/</url>
+            <snapshots>
+                <enabled>false</enabled>
+            </snapshots>
+            <releases>
+                <enabled>true</enabled>
+            </releases>
+        </repository>
+    </repositories>
+
+    <pluginRepositories>
+        <pluginRepository>
+            <id>proit.artifactory.releases</id>
+            <url>http://artifactory.eaist.proitr.ru/artifactory/libs-release/</url>
+            <snapshots>
+                <enabled>false</enabled>
+            </snapshots>
+            <releases>
+                <enabled>true</enabled>
+            </releases>
+        </pluginRepository>
+    </pluginRepositories>
+
+
+    <dependencies>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-web</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-test</artifactId>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-devtools</artifactId>
+            <optional>true</optional>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-data-jpa</artifactId>
+            <version>1.5.9.RELEASE</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.oracle</groupId>
+            <artifactId>ojdbc6</artifactId>
+            <version>${com.oracle.ojdbc6.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <version>${lombok.version}</version>
+            <scope>provided</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>commons-net</groupId>
+            <artifactId>commons-net</artifactId>
+            <version>3.3</version>
+        </dependency>
+
+        <dependency>
+            <groupId>commons-codec</groupId>
+            <artifactId>commons-codec</artifactId>
+            <version>1.10</version>
+        </dependency>
+
+        <!-- https://mvnrepository.com/artifact/org.apache.commons/commons-io -->
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-io</artifactId>
+            <version>1.3.2</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.jooq.trial</groupId>
+            <artifactId>jooq</artifactId>
+            <version>${org.jooq.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.jooq.trial</groupId>
+            <artifactId>jooq-meta</artifactId>
+            <version>${org.jooq.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.jooq.trial</groupId>
+            <artifactId>jooq-codegen-maven</artifactId>
+            <version>${org.jooq.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-thymeleaf</artifactId>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <finalName>tru-ftp-service</finalName>
+        <plugins>
+            <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>repackage</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.8.0</version>
+                <configuration>
+                    <encoding>UTF-8</encoding>
+                    <generatedSourcesDirectory>target/generated-sources/jooq</generatedSourcesDirectory>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+
+    <profiles>
+        <profile>
+            <id>schema-generation</id>
+            <build>
+                <plugins>
+
+                    <plugin>
+                        <groupId>org.codehaus.mojo</groupId>
+                        <artifactId>jaxb2-maven-plugin</artifactId>
+                        <version>2.3</version>
+                        <executions>
+                            <execution>
+                                <goals>
+                                    <goal>xjc</goal>
+                                </goals>
+                                <configuration>
+                                    <encoding>UTF-8</encoding>
+                                    <sources>
+                                        <source>src/main/resources/eis/</source>
+                                    </sources>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+
+                </plugins>
+            </build>
+        </profile>
+
+        <profile>
+            <id>demo1</id>
+            <properties>
+                <jooq-codegen-maven.url>jdbc:oracle:thin:@//10.241.5.31:1521/eaistdev2</jooq-codegen-maven.url>
+                <jooq-codegen-maven.username>eaist_users</jooq-codegen-maven.username>
+                <jooq-codegen-maven.password>eaist</jooq-codegen-maven.password>
+            </properties>
+        </profile>
+
+        <profile>
+            <id>f</id>
+            <properties>
+                <jooq-codegen-maven.url>jdbc:oracle:thin:@//10.19.103.117:1521/eaistr</jooq-codegen-maven.url>
+                <jooq-codegen-maven.username>eaist_users</jooq-codegen-maven.username>
+                <jooq-codegen-maven.password>eaist</jooq-codegen-maven.password>
+            </properties>
+        </profile>
+
+        <profile>
+            <id>codegen</id>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.jooq.trial</groupId>
+                        <artifactId>jooq-codegen-maven</artifactId>
+                        <version>${org.jooq.version}</version>
+                        <executions>
+                            <execution>
+                                <goals>
+                                    <goal>generate</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+
+                        <dependencies>
+                            <dependency>
+                                <groupId>com.oracle</groupId>
+                                <artifactId>ojdbc6</artifactId>
+                                <version>${com.oracle.ojdbc6.version}</version>
+                            </dependency>
+                        </dependencies>
+
+                        <configuration>
+                            <jdbc>
+                                <driver>oracle.jdbc.OracleDriver</driver>
+                                <url>${jooq-codegen-maven.url}</url>
+                                <username>${jooq-codegen-maven.username}</username>
+                                <password>${jooq-codegen-maven.password}</password>
+                            </jdbc>
+                            <generator>
+                                <database>
+                                    <name>org.jooq.meta.oracle.OracleDatabase</name>
+                                    <includes>
+                                        N_FTP_223.*
+                                        | SEQ_FTP_223.*
+                                        | N_CS_PROPERTIES
+                                        | N_PARTICIPANT
+                                    </includes>
+                                    <schemata>
+                                        <schema>
+                                            <inputSchema>EAIST_NSI</inputSchema>
+                                        </schema>
+                                    </schemata>
+
+                                    <forcedTypes>
+                                        <forcedType>
+                                            <name>BOOLEAN</name>
+                                            <expression>.*\.IS_.*</expression>
+                                            <types>NUMBER\(1\)</types>
+                                        </forcedType>
+                                    </forcedTypes>
+                                    <forceIntegerTypesOnZeroScaleDecimals>true</forceIntegerTypesOnZeroScaleDecimals>
+                                </database>
+                                <target>
+                                    <packageName>ru.proitr.tru</packageName>
+                                    <directory>target/generated-sources/jooq</directory>
+                                </target>
+                                <generate>
+                                    <pojos>true</pojos>
+                                    <daos>true</daos>
+                                    <sequences>true</sequences>
+                                    <validationAnnotations>true</validationAnnotations>
+                                    <springAnnotations>true</springAnnotations>
+                                    <globalObjectReferences>true</globalObjectReferences>
+                                    <javaTimeTypes>true</javaTimeTypes>
+                                </generate>
+                            </generator>
+                        </configuration>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+    </profiles>
+
+</project>

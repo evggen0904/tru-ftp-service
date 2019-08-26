@@ -1,0 +1,29 @@
+server:
+  port: 8088
+
+spring:
+    datasource:
+      url: ${db.url:jdbc:oracle:thin:@//10.241.5.31:1521/eaistdev2}
+      username: ${db.username:eaist_nsi}
+      password: ${db.password:eaist}
+      driver-class-name: oracle.jdbc.driver.OracleDriver
+
+logging:
+  file: /mnt/data/logs/tru/tru_ftp.log
+  level:
+    ru:
+      proitr:
+        tru:
+          INFO
+
+upload.path: /mnt/data/tru/files
+ftp:
+  directory.msp: /out/published/Moskva/ListsGWS/daily/
+  directory.ip: /out/published/Moskva/ListsInnov/daily/
+  host: ftp.zakupki.gov.ru
+  user: fz223free
+  password: fz223free
+  port: 21
+  timeout: 60000
+
+validation.path: src/main/resources/eis/purchase.xsd
